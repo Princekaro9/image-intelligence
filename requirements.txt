@@ -1,0 +1,5 @@
+Flask>=3.0,<4.0
+Pillow>=10.4,<14.0
+reportlab>=4.2,<6.0
+waitress>=3.0,<4.0
+# Facultatif pour lire certaines variantes HEIC/HEIF avec Pillow : pip install pillow-heif
