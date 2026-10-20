@@ -12,8 +12,29 @@ let previewUrl = null;
 let progressTimer = null;
 const analyzeButtonLabel = analyzeButton.innerHTML;
 
-// Le carton de bienvenue disparaît après environ 1,5 seconde.
-window.setTimeout(() => document.getElementById('splash')?.remove(), 1500);
+// Attend le chargement du visuel avant de le garder 1,5 seconde à l’écran.
+const splashOverlay = document.getElementById('splash');
+const splashPhoto = splashOverlay?.querySelector('.splash-full');
+let splashDismissScheduled = false;
+function dismissSplash() {
+  if (!splashOverlay || splashDismissScheduled) return;
+  splashDismissScheduled = true;
+  window.setTimeout(() => splashOverlay.classList.add('is-closing'), 1000);
+  window.setTimeout(() => splashOverlay.remove(), 1500);
+}
+if (splashPhoto && splashOverlay) {
+  const onSplashReady = () => { splashOverlay.classList.add('has-photo'); dismissSplash(); };
+  const onSplashError = () => { splashPhoto.remove(); dismissSplash(); };
+  const splashLoadFallback = window.setTimeout(() => {
+    if (!splashPhoto.complete || !splashPhoto.naturalWidth) onSplashError();
+  }, 4000);
+  splashPhoto.addEventListener('load', () => { clearTimeout(splashLoadFallback); onSplashReady(); }, { once: true });
+  splashPhoto.addEventListener('error', () => { clearTimeout(splashLoadFallback); onSplashError(); }, { once: true });
+  if (splashPhoto.complete) {
+    clearTimeout(splashLoadFallback);
+    if (splashPhoto.naturalWidth) onSplashReady(); else onSplashError();
+  }
+} else dismissSplash();
 fileInput.addEventListener('change', () => selectFile(fileInput.files[0]));
 function selectFile(file) {
   if (!file) return;
