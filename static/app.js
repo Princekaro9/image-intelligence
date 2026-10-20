@@ -80,9 +80,13 @@ function el(tag, cls, value) { const node = document.createElement(tag); if (cls
 function renderReport(data) {
   document.getElementById('resultTitle').textContent = data.filename || 'Rapport d’analyse';
   document.getElementById('resultSubtitle').textContent = `${data.metadata_count} balises disponibles · ${data.format || 'image'} · ${(data.file_size_bytes / 1048576).toFixed(2)} Mo`;
+  const summaryData = data.summary || {};
+  const captureKeys = ['Fabricant', 'Modèle', 'Date de prise de vue', 'Objectif', 'Distance focale', 'Ouverture', 'Vitesse', 'ISO', 'Flash'];
+  const hasCaptureData = captureKeys.some(key => summaryData[key] !== null && summaryData[key] !== undefined && summaryData[key] !== '') || data.gps?.available;
+  document.getElementById('metadataMissingNotice').hidden = Boolean(hasCaptureData);
   const warning = document.getElementById('analysisWarning'); warning.hidden = !data.warning; if (data.warning) warning.textContent = data.warning;
   const stats = document.getElementById('statsGrid'); stats.replaceChildren();
-  const summary = data.summary || {};
+  const summary = summaryData;
   for (const [label, value, sub] of [
     ['APPAREIL', summary['Modèle'] || summary['Fabricant'], summary['Fabricant'] || 'Identification absente'],
     ['PRISE DE VUE', summary['Date de prise de vue'], 'Date intégrée au fichier'],
