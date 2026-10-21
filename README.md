@@ -12,6 +12,8 @@
 - `static/style.css` : style responsive anthracite, laiton et sauge, accordé au fond photo.
 - `static/app.js` : import, aperçu, interactions, recherche et téléchargements.
 
+Après l'analyse, un résumé en langage courant indique l'appareil, la date et la disponibilité de la localisation. La carte Google n'apparaît que si une latitude et une longitude valides sont présentes. L'affichage intégré nécessite une clé Google Maps Embed API restreinte au domaine de l'application ; sans clé, le lien Google Maps reste disponible.
+
 ## Installer et démarrer sous Windows (PowerShell)
 
 Dans le dossier du projet :
@@ -61,7 +63,9 @@ La disponibilité du module dépend de la version Python et des codecs installé
 
 L'état d'ExifTool est disponible sur <http://127.0.0.1:5000/health>. Essaie une photo originale, une image sans EXIF, un fichier avec GPS, un fichier de plus de 15 Mo et un fichier texte renommé en `.jpg`. Les données GPS peuvent être absentes ou inexactes.
 
-L'aperçu cartographique OpenStreetMap et son lien apparaissent uniquement lorsque les coordonnées sont dans le fichier. Dans ce cas, le navigateur contacte OpenStreetMap. Aucune adresse n'est recherchée.
+La carte Google Maps intégrée et son lien apparaissent uniquement lorsque les coordonnées sont dans le fichier. Dans ce cas, Google reçoit la position pour afficher la carte. Sans clé API, le lien externe continue de fonctionner sans clé.
+
+Pour activer la carte intégrée en local, définis `GOOGLE_MAPS_API_KEY` dans l'environnement avant de lancer l'application. Sous PowerShell : `$env:GOOGLE_MAPS_API_KEY = 'ta-clé'`, puis `python app.py`. Sur Railway, ajoute cette variable dans les variables du service. Active Maps Embed API dans Google Cloud et restreins la clé HTTP aux domaines de l'application avant le déploiement. La clé est visible dans le navigateur, donc elle doit être limitée à l'API et aux domaines autorisés.
 
 ## Confidentialité et sécurité
 

@@ -23,6 +23,7 @@ ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp", ".heic"
 app = Flask(__name__)
 app.config.update(MAX_CONTENT_LENGTH=MAX_FILE_BYTES + 1024 * 1024, JSON_AS_ASCII=False, TEMPLATES_AUTO_RELOAD=True)
 PUBLIC_MODE = os.getenv("PUBLIC_MODE", "0").lower() in {"1", "true", "yes"}
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "").strip()
 
 
 @app.after_request
@@ -32,13 +33,14 @@ def security_headers(response):
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Referrer-Policy"] = "no-referrer"
     response.headers["Cache-Control"] = "no-store"
-    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-src https://www.openstreetmap.org; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-src https://www.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
     return response
 
 
 @app.get("/")
 def home():
-    return render_template("index.html", exiftool=exiftool_status(), public_mode=PUBLIC_MODE)
+    return render_template("index.html", exiftool=exiftool_status(), public_mode=PUBLIC_MODE,
+                           google_maps_api_key=GOOGLE_MAPS_API_KEY)
 
 
 @app.post("/api/analyze")

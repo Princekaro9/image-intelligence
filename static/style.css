@@ -5,6 +5,8 @@
 body{background-image:linear-gradient(180deg,rgba(8,13,24,.84),rgba(8,13,24,.92)),url('/static/images/app-background.jpg');background-size:cover;background-position:center;background-attachment:fixed}
 .splash-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.splash-image.has-photo:before,.splash-image.has-photo .camera-shape,.splash-image.has-photo .photo-shape{display:none}
 .map-link{color:#8dc5ff;margin-left:12px;align-self:center}.map-link:hover{color:white}
+.simple-summary{margin:0 0 14px}.simple-summary>.card-heading{margin-bottom:12px}.simple-summary .stats-grid{margin:0}.simple-summary .stat{background:rgba(36,34,31,.94)}.simple-summary .stat-value{font-size:15px;line-height:1.45}.simple-summary .stat-sub{line-height:1.55}.gps-unavailable{grid-template-columns:1fr}.gps-privacy-note{margin:12px 0 0;color:#c1b7a7;font-size:11px;line-height:1.65}
+.camera-shape{transform:none}
 .splash-full{display:none}.splash.has-photo{background:#e8e5df}.splash.has-photo .splash-full{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.splash.has-photo .splash-card{display:none}
 
 /* Palette laiton, lin et sauge en accord avec le fond de l'appareil photo. */
