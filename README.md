@@ -63,9 +63,7 @@ La disponibilité du module dépend de la version Python et des codecs installé
 
 L'état d'ExifTool est disponible sur <http://127.0.0.1:5000/health>. Essaie une photo originale, une image sans EXIF, un fichier avec GPS, un fichier de plus de 15 Mo et un fichier texte renommé en `.jpg`. Les données GPS peuvent être absentes ou inexactes.
 
-La carte Google Maps intégrée et son lien apparaissent uniquement lorsque les coordonnées sont dans le fichier. Dans ce cas, Google reçoit la position pour afficher la carte. Sans clé API, le lien externe continue de fonctionner sans clé.
-
-Pour activer la carte intégrée en local, définis `GOOGLE_MAPS_API_KEY` dans l'environnement avant de lancer l'application. Sous PowerShell : `$env:GOOGLE_MAPS_API_KEY = 'ta-clé'`, puis `python app.py`. Sur Railway, ajoute cette variable dans les variables du service. Active Maps Embed API dans Google Cloud et restreins la clé HTTP aux domaines de l'application avant le déploiement. La clé est visible dans le navigateur, donc elle doit être limitée à l'API et aux domaines autorisés.
+La carte OpenStreetMap intégrée et le lien Google Maps apparaissent uniquement lorsque les coordonnées sont dans le fichier. OpenStreetMap reçoit les coordonnées pour afficher l'aperçu. Google ne les reçoit que si l'utilisateur ouvre le lien Google Maps. Cette carte intégrée ne demande pas de clé API.
 
 ## Confidentialité et sécurité
 

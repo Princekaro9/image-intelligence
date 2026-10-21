@@ -162,20 +162,17 @@ function renderGps(gps) {
   }
   const actions = el('div', 'gps-line'); const copy = el('button', 'secondary-button', 'Copier les coordonnées'); copy.type = 'button'; copy.addEventListener('click', async () => { try { await navigator.clipboard.writeText(coords); copy.textContent = 'Coordonnées copiées'; } catch { copy.textContent = coords; } });
   const link = el('a', 'map-link', 'Ouvrir dans Google Maps ↗'); link.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(coords)}`; link.target = '_blank'; link.rel = 'noreferrer'; actions.append(copy, link); details.append(actions);
-  const apiKey = map.dataset.googleMapsApiKey;
   const privacyNote = document.getElementById('gpsPrivacyNote');
-  if (apiKey) {
-    // La clé est publique côté navigateur : la restreindre au domaine dans Google Cloud.
-    const iframe = document.createElement('iframe'); iframe.title = 'Carte Google Maps de la position GPS'; iframe.loading = 'lazy';
-    iframe.referrerPolicy = 'strict-origin-when-cross-origin'; iframe.allowFullscreen = true;
-    const query = new URLSearchParams({ key: apiKey, q: coords, zoom: '15' });
-    iframe.src = `https://www.google.com/maps/embed/v1/place?${query.toString()}`;
-    map.append(iframe);
-    privacyNote.textContent = 'La carte intégrée est fournie par Google Maps et lui transmet les coordonnées GPS de cette photo. Le lien externe ci-dessous ouvre aussi cette position dans Google Maps.';
-  } else {
-    map.append(el('div', 'map-placeholder', 'La carte intégrée Google Maps n’est pas configurée. Le lien ci-dessous ouvrira la position dans Google Maps.'));
-    privacyNote.textContent = 'Aucune carte Google n’est chargée pour le moment. Les coordonnées seront transmises à Google uniquement si tu ouvres le lien ci-dessous.';
-  }
+  // Affiche une carte OpenStreetMap sans clé API. Le lien Google Maps reste séparé
+  // et ne transmet les coordonnées à Google que si l’utilisateur l’ouvre.
+  const latitude = Number(gps.latitude), longitude = Number(gps.longitude), delta = 0.01;
+  const bounds = [Math.max(-180, longitude - delta), Math.max(-85, latitude - delta), Math.min(180, longitude + delta), Math.min(85, latitude + delta)];
+  const query = new URLSearchParams({ bbox: bounds.join(','), layer: 'mapnik', marker: coords });
+  const iframe = document.createElement('iframe'); iframe.title = 'Carte de la position GPS'; iframe.loading = 'lazy';
+  iframe.referrerPolicy = 'strict-origin-when-cross-origin'; iframe.allowFullscreen = true;
+  iframe.src = `https://www.openstreetmap.org/export/embed.html?${query.toString()}`;
+  map.append(iframe);
+  privacyNote.textContent = 'Aperçu fourni par OpenStreetMap. Les coordonnées GPS sont transmises à OpenStreetMap pour afficher la carte. Si tu ouvres Google Maps, elles seront aussi transmises à Google.';
 }
 function renderSummary(target, summary, keys, panelId = null) {
   const list = document.getElementById(target); list.replaceChildren();
